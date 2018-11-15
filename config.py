@@ -4,11 +4,10 @@ import redis
 class Config:
     """工程配置信息"""
     SECRET_KEY = 'EjpNVSNQTyGi1VvWECj9TvC/+kq3oujee2kTfQUs8yCM6xX9Yjq52v54g+HVoknA'
-    DEBUG = True
 
     # 数据库配置信息
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@172.0.0.1:3306/'
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # redis配置
     REDIS_HOST = '127.0.0.1'
@@ -20,3 +19,19 @@ class Config:
     # 创建redis实例
     SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST, port=REDIS_POST)
     PERMANENT_SESSION_LIFETIME = 86400  # session有效期
+
+
+class DevelopmentConfig(Config):
+    """开发模式下配置"""
+    DEBUG = True
+
+
+class ProductionConfig(Config):
+    """生产模式配置"""
+    pass
+
+
+config = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig
+}

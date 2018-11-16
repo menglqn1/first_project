@@ -1,3 +1,5 @@
+import logging
+
 import redis
 
 
@@ -20,6 +22,8 @@ class Config:
     SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST, port=REDIS_POST)
     PERMANENT_SESSION_LIFETIME = 86400  # session有效期
 
+    LOG_LEVEL = logging.DEBUG
+
 
 class DevelopmentConfig(Config):
     """开发模式下配置"""
@@ -28,7 +32,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     """生产模式配置"""
-    pass
+    LOG_LEVEL = logging.ERROR
 
 
 config = {

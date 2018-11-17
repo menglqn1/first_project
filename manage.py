@@ -11,3 +11,5 @@ manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     manager.run()
+    from info.modules.index import index_blu
+    app.register_blueprint(index_blu)

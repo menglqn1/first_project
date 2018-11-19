@@ -7,6 +7,7 @@ from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from config import config
+from info.utils.common import do_index_class
 
 db = SQLAlchemy()
 redis_store = None
@@ -39,8 +40,9 @@ def create_app(config_name):
     global redis_store
     redis_store = redis.StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_POST)
 
-    CSRFProtect(app)
+    # CSRFProtect(app)
     Session(app)
+    app.add_template_filter(do_index_class, "index_class")
 
     from info.modules.index import index_blu
     app.register_blueprint(index_blu)

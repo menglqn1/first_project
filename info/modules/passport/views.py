@@ -1,4 +1,3 @@
-
 import random
 import re
 from datetime import datetime
@@ -20,9 +19,10 @@ def get_image_code():
     code_id = request.args.get('code_id')
     # 2.生成验证码
     name, text, image = captcha.generate_captcha()
+    print(text)
 
     try:
-        redis_store.setex('ImageCode_' + code_id, constants.IMAGE_CODE_REDIS_EXPIRES, text)
+        redis_store.set('ImageCode_' + code_id, text, constants.IMAGE_CODE_REDIS_EXPIRES)
     except Exception as e:
         current_app.logger.error(e)
         return make_response(jsonify(errno=RET.DATAERR, errmsg='保存图片验证失败'))
@@ -33,7 +33,7 @@ def get_image_code():
     return resp
 
 
-@passport_blu.route('/smscode', methods=["POST", "GET"])
+@passport_blu.route('/smscode', methods=["POST"])
 def send_sms():
     """
     1. 接收参数并判断是否有值
@@ -51,7 +51,7 @@ def send_sms():
     mobile = args_data.get("mobile")
     image_code = args_data.get("image_code")
     image_code_id = args_data.get("image_code_id")
-    print(mobile, image_code, image_code_id)
+    # print(mobile, image_code, image_code_id)
 
     if not all([mobile, image_code_id, image_code]):
         # 参数不全
@@ -67,7 +67,8 @@ def send_sms():
         real_image_code = redis_store.get("ImageCode_" + image_code_id)
         # 如果能够取出来值，删除redis中缓存的内容
         if real_image_code:
-            real_image_code = real_image_code.decode()
+            print(real_image_code)
+            # real_image_code = real_image_code.decode()
             redis_store.delete("ImageCode_" + image_code_id)
     except Exception as e:
         current_app.logger.error(e)
@@ -154,7 +155,7 @@ def register():
     user.nick_name = mobile
     user.mobile = mobile
 
-    user.password_hash =generate_password_hash(password)
+    user.password_hash = generate_password_hash(password)
 
     try:
         db.session.add(user)
@@ -214,4 +215,14 @@ def login():
     return jsonify(errno=RET.OK, errmsg='OK')
 
 
+@passport_blu.route('/logout', methods=['POST'])
+def logout():
+    """
+       清除session中的对应登录之后保存的信息
+       :return:
+       """
+    session.pop('user_id', None)
+    session.pop('nick_name', None)
+    session.pop('mobile', None)
 
+    return jsonify(errno=RET.OK, errmsg='OK')

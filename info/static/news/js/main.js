@@ -104,21 +104,6 @@ $(function(){
             return;
         }
 
-        // 发起登录请求
-        $(".login_form_con").submit(function (e) {
-            e.preventDefault()
-            var mobile = $(".login_form #mobile").val()
-            var password = $(".login_form #password").val()
-
-            if (!mobile) {
-                $("#login-mobile-err").show();
-                return;
-            }
-
-            if (!password) {
-                $("#login-password-err").show();
-                return;
-            }
 
             var params = {
                 "mobile": mobile,
@@ -128,6 +113,9 @@ $(function(){
             $.ajax({
                 url:"/passport/login",
                 method: "post",
+                headers: {
+                    "X-CSRFToken": getCookie("csrf_token")
+                },
                 data: JSON.stringify(params),
                 contentType: "application/json",
                 success: function (resp) {
@@ -142,7 +130,6 @@ $(function(){
             })
         })
     })
-
 
     // TODO 注册按钮点击
     $(".register_form_con").submit(function (e) {
@@ -174,36 +161,6 @@ $(function(){
             return;
         }
 
-        // 发起注册请求
-        // 注册表单提交
-$(".register_form_con").submit(function (e) {
-    e.preventDefault()
-
-    // 取到用户输入的内容
-    var mobile = $("#register_mobile").val()
-    var smscode = $("#smscode").val()
-    var password = $("#register_password").val()
-
-    if (!mobile) {
-        $("#register-mobile-err").show();
-        return;
-    }
-    if (!smscode) {
-        $("#register-sms-code-err").show();
-        return;
-    }
-    if (!password) {
-        $("#register-password-err").html("请填写密码!");
-        $("#register-password-err").show();
-        return;
-    }
-
-    if (password.length < 6) {
-        $("#register-password-err").html("密码长度不能少于6位");
-        $("#register-password-err").show();
-        return;
-    }
-
     var params = {
         "mobile": mobile,
         "smscode": smscode,
@@ -227,8 +184,6 @@ $(".register_form_con").submit(function (e) {
     })
 })
 
-    })
-})
 
 var imageCodeId = ""
 
@@ -294,6 +249,21 @@ function sendSMSCode() {
         }
     })
 }
+function logout() {
+$.ajax({
+    url: "/passport/logout",
+    type: "post",
+    contentType: "application/json",
+    headers: {
+        "X-CSRFToken": getCookie("csrf_token")
+    },
+    success: function (resp) {
+        // 刷新当前界面
+        location.reload()
+    }
+})
+}
+
 
 // 调用该函数模拟点击左侧按钮
 function fnChangeMenu(n) {

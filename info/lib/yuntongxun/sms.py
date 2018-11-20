@@ -12,7 +12,7 @@ _accountToken = 'c1a8a0ef6747484da1fd6c93942baf96'
 _appId = '8aaf070867152993016721730d9f0be7'
 
 # 说明：请求地址，生产环境配置成app.cloopen.com
-_serverIP = 'sandboxapp.cloopen.com'
+_serverIP = 'app.cloopen.com'
 
 # 说明：请求端口 ，生产环境为8883
 _serverPort = "8883"

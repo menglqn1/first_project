@@ -10,6 +10,7 @@ class Config:
     # 数据库配置信息
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@127.0.0.1:3306/information'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     # redis配置
     REDIS_HOST = '127.0.0.1'

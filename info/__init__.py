@@ -9,7 +9,6 @@ from flask_wtf import CSRFProtect
 from flask_wtf.csrf import generate_csrf
 
 from config import config
-from info.utils.common import do_index_class
 
 db = SQLAlchemy()
 redis_store = None
@@ -46,6 +45,7 @@ def create_app(config_name):
 
     # CSRFProtect(app)
     Session(app)
+    from info.utils.common import do_index_class
     app.add_template_filter(do_index_class, "index_class")
 
     @app.after_request
@@ -59,5 +59,8 @@ def create_app(config_name):
 
     from info.modules.passport import passport_blu
     app.register_blueprint(passport_blu)
+
+    from info.modules.news import news_blu
+    app.register_blueprint(news_blu)
 
     return app

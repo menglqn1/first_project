@@ -207,11 +207,6 @@ def login():
 
     user.last_login = datetime.now()
 
-    try:
-        db.session.commit()
-    except Exception as e:
-        current_app.logger.error(e)
-
     return jsonify(errno=RET.OK, errmsg='OK')
 
 

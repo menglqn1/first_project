@@ -155,7 +155,7 @@ def register():
     user.nick_name = mobile
     user.mobile = mobile
 
-    user.password_hash = generate_password_hash(password)
+    user.password = password
 
     try:
         db.session.add(user)

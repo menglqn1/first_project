@@ -215,7 +215,7 @@ def comment_like():
             CommentLike.comment_id == comment.id).first()
         if comment_like_model:
             db.session.delete(comment_like_model)
-            if comment.like_count > 1:
+            if comment.like_count >= 1:
                 comment.like_count -= 1
 
     try:
